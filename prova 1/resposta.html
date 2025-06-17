@@ -101,15 +101,183 @@
     <h2 id="q1">QUESTÃO 1 - MODELAGEM CONCEITUAL E LÓGICA</h2>
 
     <h3>a) Identificação e Listagem de Entidades e Atributos</h3>
-    <!-- ...existing markdown content converted to HTML... -->
-    <p>Com base no mini mundo apresentado do Sistema de Gestão da Agência de Turismo "Mundo Aventura" e considerando a flexibilidade do PostgreSQL para abordar conceitos de BDOO, as seguintes entidades foram identificadas, juntamente com seus principais atributos, chaves primárias (PK), chaves estrangeiras (FK) e tipos de dados sugeridos. Notamos a aplicação de <strong>tipos compostos</strong> para atributos que representam estruturas complexas, alinhando-se à discussão da Questão 4.</p>
-    <!-- ...continua com as entidades, atributos, tabelas, etc, convertendo listas e blocos de código... -->
+    <p>
+        O sistema da agência de turismo "Mundo Aventura" foi analisado para identificar as principais entidades e seus atributos. O modelo foi pensado para aproveitar recursos do PostgreSQL, como tipos compostos, e garantir flexibilidade para diferentes perfis de clientes e pacotes.
+    </p>
+
+    <h4>Entidade: CLIENTES</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Representa os diferentes perfis de clientes da agência, sejam eles individuais, corporativos ou grupos organizados.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>id</code> SERIAL - <strong>Chave Primária (PK)</strong>. Identificador único do cliente.</li>
+                <li><code>cpf_cnpj</code>: VARCHAR(14) - Identificador único para clientes (CPF para individuais, CNPJ para corporativos/grupos). <strong>UNIQUE</strong></li>
+                <li><code>nome_razao_social</code>: VARCHAR(255) - Nome completo do cliente ou razão social da empresa.</li>
+                <li><code>endereco_cliente</code>: <code>endereco</code> (Tipo Composto) - Endereço completo (rua, número, bairro, cidade, estado, CEP).</li>
+                <li><code>info_contato</code>: <code>contato</code> (Tipo Composto) - Informações de contato (email, telefone principal, telefone secundário).</li>
+                <li><code>data_nascimento_fundacao</code>: DATE - Data de nascimento para clientes individuais ou data de fundação para corporativos/grupos.</li>
+                <li><code>tipo_cliente</code>: VARCHAR(20) - Categoria do cliente (ex: 'individual', 'corporativo', 'grupo').</li>
+                <li><code>categoria_fidelidade_id</code>: INTEGER - <strong>Chave Estrangeira (FK)</strong> referenciando <code>CATEGORIAS_FIDELIDADE.id</code>. Nível de fidelidade do cliente.</li>
+                <li><code>data_cadastro</code>: DATE - Data em que o cliente foi cadastrado no sistema.</li>
+                <li><code>status_cliente</code>: VARCHAR(20) - Situação do cliente (ex: 'ativo', 'inativo').</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: DESTINOS</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Representa os locais turísticos para os quais a agência oferece pacotes.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>id</code> SERIAL - <strong>Chave Primária (PK)</strong>. Identificador único do destino.</li>
+                <li><code>codigo_destino</code>: VARCHAR(10) - Código identificador único do destino. <strong>UNIQUE</strong></li>
+                <li><code>nome_destino</code>: VARCHAR(255) - Nome do destino turístico.</li>
+                <li><code>pais</code>: VARCHAR(100) - País onde o destino está localizado.</li>
+                <li><code>estado_provincia</code>: VARCHAR(100) - Estado ou província do destino.</li>
+                <li><code>cidade_principal</code>: VARCHAR(100) - Cidade principal do destino.</li>
+                <li><code>descricao_detalhada</code>: TEXT - Descrição abrangente do destino.</li>
+                <li><code>clima_predominante</code>: VARCHAR(50) - Tipo de clima predominante no destino.</li>
+                <li><code>melhor_epoca_visitar</code>: VARCHAR(100) - Meses ideais para visitar o destino.</li>
+                <li><code>nivel_dificuldade</code>: VARCHAR(20) - Nível de dificuldade associado ao destino (ex: 'facil', 'moderado', 'dificil').</li>
+                <li><code>categoria_turistica</code>: VARCHAR(50) - Categoria do turismo (ex: 'praia', 'montanha', 'cidade historica', 'aventura', 'cultural' ou 'gastronomico').</li>
+                <li><code>custo_medio_diario</code>: DECIMAL(10,2) - Custo médio diário estimado para o destino.</li>
+                <li><code>idioma_local</code>: VARCHAR(50) - Idioma(s) falado(s) no local.</li>
+                <li><code>moeda_local</code>: VARCHAR(10) - Moeda utilizada no destino.</li>
+                <li><code>documentacao_necessaria</code>: TEXT - Informações sobre documentos exigidos para o destino.</li>
+                <li><code>status_destino</code>: VARCHAR(20) - Situação do destino (ex: 'ativo', 'inativo', 'sazonal').</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: PACOTES_TURISTICOS</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Representa os pacotes de viagem pré-definidos oferecidos pela agência.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>id</code> SERIAL - <strong>Chave Primária (PK)</strong>. Identificador único do pacote.</li>
+                <li><code>codigo_pacote</code>: VARCHAR(10) - Código identificador único do pacote. <strong>UNIQUE</strong></li>
+                <li><code>nome_pacote</code>: VARCHAR(255) - Nome do pacote turístico.</li>
+                <li><code>descricao_detalhada</code>: TEXT - Descrição detalhada do pacote.</li>
+                <li><code>destino_principal_id</code>: INTEGER - <strong>Chave Estrangeira (FK)</strong> referenciando <code>DESTINOS.id</code>. O destino principal do pacote.</li>
+                <li><code>duracao_dias</code>: INTEGER - Duração total do pacote em dias.</li>
+                <li><code>preco_base_por_pessoa</code>: DECIMAL(10,2) - Preço base por pessoa para o pacote.</li>
+                <li><code>categoria_pacote</code>: VARCHAR(20) - Categoria do pacote (ex: 'economico', 'standard', 'premium' ou 'luxo').</li>
+                <li><code>tipo_viagem</code>: VARCHAR(20) - Tipo de viagem para o qual o pacote é adequado (ex: 'individual', 'casal', 'familia' ou 'grupo').</li>
+                <li><code>inclui_transporte</code>: BOOLEAN - Indica se o pacote inclui transporte (sim/não).</li>
+                <li><code>inclui_hospedagem</code>: BOOLEAN - Indica se o pacote inclui hospedagem (sim/não).</li>
+                <li><code>inclui_alimentacao</code>: VARCHAR(20) - Tipo de alimentação incluída (ex: 'cafe', 'meia pensao' ou 'pensao completa').</li>
+                <li><code>nivel_atividade_fisica</code>: VARCHAR(20) - Nível de atividade física requerido (ex: 'baixo', 'medio' ou 'alto').</li>
+                <li><code>idade_minima_recomendada</code>: INTEGER - Idade mínima recomendada para o pacote.</li>
+                <li><code>idade_maxima_recomendada</code>: INTEGER - Idade máxima recomendada para o pacote.</li>
+                <li><code>numero_maximo_participantes</code>: INTEGER - Número máximo de participantes permitidos no pacote.</li>
+                <li><code>status_pacote</code>: VARCHAR(20) - Situação do pacote (ex: 'ativo', 'inativo' ou 'sazonal').</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: RESERVAS</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Controla todas as reservas e vendas realizadas pela agência.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>id</code> SERIAL - <strong>Chave Primária (PK)</strong>. Identificador único da reserva.</li>
+                <li><code>cliente_id</code>: INTEGER - <strong>Chave Estrangeira (FK)</strong> referenciando <code>CLIENTES.id</code>. O cliente que realizou a reserva.</li>
+                <li><code>pacote_id</code>: INTEGER - <strong>Chave Estrangeira (FK)</strong> referenciando <code>PACOTES_TURISTICOS.id</code>. O pacote turístico reservado.</li>
+                <li><code>data_reserva</code>: DATE - Data em que a reserva foi efetuada.</li>
+                <li><code>data_inicio_viagem</code>: DATE - Data de início da viagem.</li>
+                <li><code>data_retorno</code>: DATE - Data de retorno da viagem.</li>
+                <li><code>numero_total_pessoas</code>: INTEGER - Número total de pessoas incluídas na reserva.</li>
+                <li><code>valor_total_reserva</code>: DECIMAL(10,2) - Valor total da reserva.</li>
+                <li><code>valor_entrada_pago</code>: DECIMAL(10,2) - Valor já pago como entrada.</li>
+                <li><code>forma_pagamento</code>: VARCHAR(50) - Método de pagamento (ex: 'cartão', 'transferência', 'dinheiro', 'parcelado').</li>
+                <li><code>numero_parcelas</code>: INTEGER - Número de parcelas, se a forma de pagamento for 'parcelado' (opcional).</li>
+                <li><code>data_limite_pagamento_final</code>: DATE - Data limite para o pagamento final da reserva.</li>
+                <li><code>vendedor_responsavel</code>: VARCHAR(255) - Nome ou identificador do vendedor que realizou a reserva.</li>
+                <li><code>observacoes_especiais</code>: TEXT - Quaisquer observações adicionais sobre a reserva.</li>
+                <li><code>status_reserva</code>: VARCHAR(20) - Situação atual da reserva (ex: 'pendente', 'confirmada', 'paga', 'cancelada', 'em andamento' ou 'finalizada').</li>
+                <li><code>motivo_cancelamento</code>: TEXT - Motivo do cancelamento, se aplicável (opcional).</li>
+                <li><strong>Nota:</strong> O atributo <code>valor_restante_a_pagar</code> é um valor derivado (<code>valor_total_reserva - valor_entrada_pago</code>) e, portanto, não é armazenado diretamente na tabela para evitar redundância e inconsistências. Ele pode ser calculado por uma função ou view no banco de dados.</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: PACOTES_DESTINOS_SECUNDARIOS</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Entidade associativa para representar os múltiplos destinos secundários que um pacote turístico pode ter, e um destino pode ser secundário em múltiplos pacotes. Resolve o relacionamento N:M entre <code>PACOTES_TURISTICOS</code> e <code>DESTINOS</code> para destinos secundários.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>pacote_id</code>: INTEGER - <strong>Chave Primária (PK), Chave Estrangeira (FK)</strong> referenciando <code>PACOTES_TURISTICOS.id</code>.</li>
+                <li><code>destino_secundario_id</code>: INTEGER - <strong>Chave Primária (PK), Chave Estrangeira (FK)</strong> referenciando <code>DESTINOS.id</code>.</li>
+                <li><strong>Chave Primária Composta</strong>: (<code>pacote_id</code>, <code>destino_secundario_id</code>)</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: PARTICIPANTES_RESERVA</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Entidade para armazenar os nomes dos participantes de uma reserva. Resolve o atributo multivalorado <code>lista_nomes_participantes</code> da entidade <code>RESERVAS</code>.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>reserva_id</code>: INTEGER - <strong>Chave Primária (PK), Chave Estrangeira (FK)</strong> referenciando <code>RESERVAS.id</code>.</li>
+                <li><code>nome_participante</code>: VARCHAR(255) - <strong>Chave Primária (PK)</strong>. Nome completo do participante.</li>
+                <li><strong>Chave Primária Composta</strong>: (<code>reserva_id</code>, <code>nome_participante</code>)</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>Entidade: CATEGORIAS_FIDELIDADE</h4>
+    <ul>
+        <li><strong>Descrição:</strong> Armazena as diferentes categorias de fidelidade e seus respectivos percentuais de desconto.</li>
+        <li><strong>Atributos:</strong>
+            <ul>
+                <li><code>id</code> SERIAL - <strong>Chave Primária (PK)</strong>. Identificador único da categoria.</li>
+                <li><code>nome_categoria</code>: VARCHAR(20) - Nome da categoria (ex: 'bronze', 'prata', 'ouro', 'platinum'). <strong>UNIQUE</strong></li>
+                <li><code>percentual_desconto</code>: DECIMAL(5,2) - Percentual de desconto associado à categoria.</li>
+            </ul>
+        </li>
+    </ul>
 
     <h3>b) Identificação e Descrição dos Relacionamentos</h3>
-    <!-- ...existing code as HTML... -->
+    <p>
+        Os relacionamentos entre as entidades foram definidos para garantir a integridade dos dados e facilitar a consulta das informações. Por exemplo, cada reserva está ligada a um cliente e a um pacote turístico, e um pacote pode ter vários destinos secundários. Para registrar os participantes de cada reserva, foi criada uma tabela específica, permitindo associar vários nomes a uma mesma reserva de forma organizada.
+    </p>
+    <h4>Relacionamento 1: CLIENTES e RESERVAS</h4>
+    <ul>
+        <li><strong>Entidades Envolvidas:</strong> CLIENTES e RESERVAS.</li>
+        <li><strong>Cardinalidade:</strong> 1:N (Um para Muitos).</li>
+        <li><strong>Descrição:</strong> Um cliente pode realizar múltiplas reservas ao longo do tempo, mas cada reserva é associada a um único cliente responsável.</li>
+        <li><strong>Atributos do Relacionamento:</strong> Não há atributos específicos no relacionamento em si, pois a chave estrangeira <code>cliente_id</code> na tabela <code>RESERVAS</code> já estabelece a ligação.</li>
+        <li><strong>Justificativa para a Cardinalidade Escolhida:</strong> A regra de negócio indica que o <code>cliente_responsavel</code> é quem contrata o pacote, e um cliente pode ter um histórico de várias reservas. No entanto, uma reserva específica é sempre atribuída a um único cliente responsável. Isso é modelado pela chave estrangeira <code>cliente_id</code> em <code>RESERVAS</code> que referencia a chave primária <code>id</code> em <code>CLIENTES</code>.</li>
+    </ul>
+    <h4>Relacionamento 2: DESTINOS e PACOTES_TURISTICOS (Destino Principal)</h4>
+    <ul>
+        <li><strong>Entidades Envolvidas:</strong> DESTINOS e PACOTES_TURISTICOS.</li>
+        <li><strong>Cardinalidade:</strong> 1:N (Um para Muitos).</li>
+        <li><strong>Descrição:</strong> Um destino turístico pode ser o destino principal de vários pacotes turísticos, mas cada pacote turístico possui apenas um destino principal.</li>
+        <li><strong>Atributos do Relacionamento:</strong> Não há atributos específicos no relacionamento.</li>
+        <li><strong>Justificativa para a Cardinalidade Escolhida:</strong> A regra de negócio estabelece que "Cada pacote deve ter obrigatoriamente um destino principal". Isso significa que um pacote está ligado a um único destino como seu principal. Por outro lado, um destino como Paris pode ser o destino principal de diversos pacotes (ex: "Pacote Paris Romântica", "Pacote Paris Cultural"). A chave estrangeira <code>destino_principal_id</code> em <code>PACOTES_TURISTICOS</code> que referencia <code>id</code> em <code>DESTINOS</code> reflete essa cardinalidade.</li>
+    </ul>
+    <h4>Relacionamento 3: PACOTES_TURISTICOS e RESERVAS</h4>
+    <ul>
+        <li><strong>Entidades Envolvidas:</strong> PACOTES_TURISTICOS e RESERVAS.</li>
+        <li><strong>Cardinalidade:</strong> 1:N (Um para Muitos).</li>
+        <li><strong>Descrição:</strong> Um pacote turístico pode ser contratado em várias reservas, mas cada reserva é feita para um único pacote turístico.</li>
+        <li><strong>Atributos do Relacionamento:</strong> Não há atributos específicos no relacionamento.</li>
+        <li><strong>Justificativa para a Cardinalidade Escolhida:</strong> Uma reserva é a contratação de um pacote específico. Portanto, uma reserva aponta para um único pacote. No entanto, o mesmo pacote turístico (ex: "Pacote Aventura na Amazônia") pode ser reservado por múltiplos clientes em diferentes ocasiões. A chave estrangeira <code>pacote_id</code> em <code>RESERVAS</code> que referencia <code>id</code> em <code>PACOTES_TURISTICOS</code> estabelece essa relação.</li>
+    </ul>
+    <h4>Relacionamento 4: PACOTES_TURISTICOS e DESTINOS (Destinos Secundários)</h4>
+    <ul>
+        <li><strong>Entidades Envolvidas:</strong> PACOTES_TURISTICOS e DESTINOS, através da entidade associativa <code>PACOTES_DESTINOS_SECUNDARIOS</code>.</li>
+        <li><strong>Cardinalidade:</strong> N:M (Muitos para Muitos).</li>
+        <li><strong>Descrição:</strong> Um pacote turístico pode incluir múltiplos destinos secundários, e um destino pode ser um destino secundário em múltiplos pacotes turísticos.</li>
+        <li><strong>Atributos do Relacionamento:</strong> Não há atributos adicionais no relacionamento em si, mas a entidade associativa <code>PACOTES_DESTINOS_SECUNDARIOS</code> contém as chaves estrangeiras de <code>PACOTES_TURISTICOS</code> e <code>DESTINOS</code>.</li>
+        <li><strong>Justificativa para a Cardinalidade Escolhida:</strong> O atributo <code>destinos_secundarios_incluidos</code> no texto original indicava uma lista de valores, o que é uma violação da 1FN e representa um relacionamento N:M implícito. Para normalizar, foi criada a entidade associativa <code>PACOTES_DESTINOS_SECUNDARIOS</code>, que permite que um pacote esteja associado a vários destinos secundários e que um destino seja secundário em vários pacotes. A chave primária composta (<code>pacote_id</code>, <code>destino_secundario_id</code>) garante a unicidade de cada par pacote-destino secundário.</li>
+    </ul>
+    <h4>Relacionamento 5: RESERVAS e PARTICIPANTES_RESERVA</h4>
+    <ul>
+        <li><strong>Entidades Envolvidas:</strong> RESERVAS e PARTICIPANTES_RESERVA.</li>
+        <li><strong>Cardinalidade:</strong> 1:N (Um para Muitos).</li>
+        <li><strong>Descrição:</strong> Uma reserva pode ter múltiplos participantes, e cada participante está associado a uma única reserva.</li>
+        <li><strong>Atributos do Relacionamento:</strong> Não há atributos adicionais no relacionamento em si, mas a entidade <code>PARTICIPANTES_RESERVA</code> contém a chave estrangeira de <code>RESERVAS</code> e o nome do participante.</li>
+        <li><strong>Justificativa para a Cardinalidade Escolhida:</strong> O atributo <code>lista_nomes_participantes</code> no texto original era um atributo multivalorado, violando a 1FN. Para normalizar, foi criada a entidade <code>PARTICIPANTES_RESERVA</code>, onde cada nome de participante é um registro separado, associado à sua respectiva reserva. A chave primária composta (<code>reserva_id</code>, <code>nome_participante</code>) garante a unicidade de cada participante dentro de uma reserva.</li>
+    </ul>
 
     <h3>c) Modelo Lógico Relacional Resultante</h3>
-    <p><strong>SGDB usado:</strong> PostgreSQL</p>
+    <p><strong>SGDB utilizado:</strong> PostgreSQL</p>
     <pre><code>-- Tipo composto para endereço
 CREATE TYPE endereco AS (
     rua VARCHAR(255),
@@ -134,10 +302,110 @@ CREATE TABLE CATEGORIAS_FIDELIDADE (
     percentual_desconto DECIMAL(5,2) NOT NULL
 );
 
--- ...demais tabelas omitidas para concisão...
+-- Tabela: CLIENTES
+CREATE TABLE CLIENTES (
+    id SERIAL PRIMARY KEY,
+    cpf_cnpj VARCHAR(14) NOT NULL UNIQUE,
+    nome_razao_social VARCHAR(255) NOT NULL,
+    endereco_cliente endereco,
+    info_contato contato,
+    data_nascimento_fundacao DATE,
+    tipo_cliente VARCHAR(20) CHECK (tipo_cliente IN ('individual', 'corporativo', 'grupo')) NOT NULL,
+    categoria_fidelidade_id INTEGER REFERENCES CATEGORIAS_FIDELIDADE(id),
+    data_cadastro DATE DEFAULT CURRENT_DATE,
+    status_cliente VARCHAR(20) CHECK (status_cliente IN ('ativo', 'inativo')) DEFAULT 'ativo'
+    -- PK: id
+    -- FK: categoria_fidelidade_id → CATEGORIAS_FIDELIDADE(id)
+);
+
+-- Tabela: DESTINOS
+CREATE TABLE DESTINOS (
+    id SERIAL PRIMARY KEY,
+    codigo_destino VARCHAR(10) NOT NULL UNIQUE,
+    nome_destino VARCHAR(255) NOT NULL,
+    pais VARCHAR(100) NOT NULL,
+    estado_provincia VARCHAR(100),
+    cidade_principal VARCHAR(100) NOT NULL,
+    descricao_detalhada TEXT,
+    clima_predominante VARCHAR(50),
+    melhor_epoca_visitar VARCHAR(100),
+    nivel_dificuldade VARCHAR(20) CHECK (nivel_dificuldade IN ('facil', 'moderado', 'dificil')),
+    categoria_turistica VARCHAR(50) CHECK (categoria_turistica IN ('praia', 'montanha', 'cidade historica', 'aventura', 'cultural', 'gastronomico')),
+    custo_medio_diario DECIMAL(10,2),
+    idioma_local VARCHAR(50),
+    moeda_local VARCHAR(10),
+    documentacao_necessaria TEXT,
+    status_destino VARCHAR(20) CHECK (status_destino IN ('ativo', 'inativo', 'sazonal')) DEFAULT 'ativo'
+    -- PK: id
+);
+
+-- Tabela: PACOTES_TURISTICOS
+CREATE TABLE PACOTES_TURISTICOS (
+    id SERIAL PRIMARY KEY,
+    codigo_pacote VARCHAR(10) NOT NULL UNIQUE,
+    nome_pacote VARCHAR(255) NOT NULL,
+    descricao_detalhada TEXT,
+    destino_principal_id INTEGER REFERENCES DESTINOS(id) NOT NULL,
+    duracao_dias INTEGER NOT NULL,
+    preco_base_por_pessoa DECIMAL(10,2) NOT NULL,
+    categoria_pacote VARCHAR(20) CHECK (categoria_pacote IN ('economico', 'standard', 'premium', 'luxo')),
+    tipo_viagem VARCHAR(20) CHECK (tipo_viagem IN ('individual', 'casal', 'familia', 'grupo')),
+    inclui_transporte BOOLEAN,
+    inclui_hospedagem BOOLEAN,
+    inclui_alimentacao VARCHAR(20) CHECK (inclui_alimentacao IN ('cafe', 'meia pensao', 'pensao completa')),
+    nivel_atividade_fisica VARCHAR(20) CHECK (nivel_atividade_fisica IN ('baixo', 'medio', 'alto')),
+    idade_minima_recomendada INTEGER,
+    idade_maxima_recomendada INTEGER,
+    numero_maximo_participantes INTEGER,
+    status_pacote VARCHAR(20) CHECK (status_pacote IN ('ativo', 'inativo', 'sazonal')) DEFAULT 'ativo'
+    -- PK: id
+    -- FK: destino_principal_id → DESTINOS(id)
+);
+
+-- Tabela: RESERVAS
+CREATE TABLE RESERVAS (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER REFERENCES CLIENTES(id) NOT NULL,
+    pacote_id INTEGER REFERENCES PACOTES_TURISTICOS(id) NOT NULL,
+    data_reserva DATE DEFAULT CURRENT_DATE,
+    data_inicio_viagem DATE NOT NULL,
+    data_retorno DATE NOT NULL,
+    numero_total_pessoas INTEGER NOT NULL,
+    valor_total_reserva DECIMAL(10,2) NOT NULL,
+    valor_entrada_pago DECIMAL(10,2),
+    forma_pagamento VARCHAR(50),
+    numero_parcelas INTEGER,
+    data_limite_pagamento_final DATE,
+    vendedor_responsavel VARCHAR(255),
+    observacoes_especiais TEXT,
+    status_reserva VARCHAR(20) CHECK (status_reserva IN ('pendente', 'confirmada', 'paga', 'cancelada', 'em andamento', 'finalizada')) DEFAULT 'pendente',
+    motivo_cancelamento TEXT
+    -- PK: id
+    -- FK: cliente_id → CLIENTES(id)
+    -- FK: pacote_id → PACOTES_TURISTICOS(id)
+);
+
+-- Tabela: PACOTES_DESTINOS_SECUNDARIOS (associativa N:M)
+CREATE TABLE PACOTES_DESTINOS_SECUNDARIOS (
+    pacote_id INTEGER REFERENCES PACOTES_TURISTICOS(id),
+    destino_secundario_id INTEGER REFERENCES DESTINOS(id),
+    PRIMARY KEY (pacote_id, destino_secundario_id)
+    -- PK: (pacote_id, destino_secundario_id)
+    -- FK: pacote_id → PACOTES_TURISTICOS(id)
+    -- FK: destino_secundario_id → DESTINOS(id)
+);
+
+-- Tabela: PARTICIPANTES_RESERVA (associativa 1:N)
+CREATE TABLE PARTICIPANTES_RESERVA (
+    reserva_id INTEGER REFERENCES RESERVAS(id),
+    nome_participante VARCHAR(255) NOT NULL,
+    PRIMARY KEY (reserva_id, nome_participante)
+    -- PK: (reserva_id, nome_participante)
+    -- FK: reserva_id → RESERVAS(id)
+);
 </code></pre>
 
-    <h2 id="q2">QUESTÃO 2 - MODELO ENTIDADE RELACIONAMENTO (Atualizada e Revisada)</h2>
+    <h2 id="q2">QUESTÃO 2 - MODELO ENTIDADE RELACIONAMENTO</h2>
 
     <h3>a) Diagrama ER completo (Legenda)</h3>
     <ul>
@@ -146,23 +414,26 @@ CREATE TABLE CATEGORIAS_FIDELIDADE (
         <li>Cardinalidade demarcada no contato de cada linha de conexão entre as entidades.</li>
         <li>Não possui atributos multivalorados e nem entidades fracas</li>
     </ul>
-
-    <!-- Imagem do DER -->
     <div>
         <img src="./imagens/DER_PGadmin.png" alt="DER - Modelo Entidade Relacionamento 1" class="img-center">
-        <div class="caption">Figura 1: DER detalhado gerado pelo pgAdmin</div>
+        <div class="caption">Figura 1: DER gerado pelo pgAdmin</div>
         <img src="./imagens/dbdiagram.png" alt="DER - Modelo Entidade Relacionamento 2" class="img-center">
-        <div class="caption">Figura 2: DER simplificado gerado pelo dbdiagram.io</div>
+        <div class="caption">Figura 2: DER pelo dbdiagram.io</div>
     </div>
-    <!-- Fim das imagens do DER -->
 
     <hr>
 
     <h3>b) Entidades Associativas</h3>
-    <p>No modelo, identificamos duas entidades associativas essenciais para a normalização e correta representação dos relacionamentos N:M e atributos multivalorados:</p>
+    <p>
+        Para representar corretamente os relacionamentos muitos-para-muitos e registrar informações como os participantes de uma reserva, foram criadas as tabelas PACOTES_DESTINOS_SECUNDARIOS e PARTICIPANTES_RESERVA. Assim, é possível associar vários destinos secundários a um pacote e vários participantes a uma reserva, sem repetir informações ou criar campos desnecessários.
+    </p>
     <ul>
-        <li><strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: Resolve o relacionamento N:M entre PACOTES_TURISTICOS e DESTINOS para destinos secundários.</li>
-        <li><strong>PARTICIPANTES_RESERVA</strong>: Resolve o atributo multivalorado lista_nomes_participantes da entidade RESERVAS.</li>
+        <li>
+            <strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: Permite que um pacote turístico tenha vários destinos secundários e que um destino possa aparecer em diferentes pacotes.
+        </li>
+        <li>
+            <strong>PARTICIPANTES_RESERVA</strong>: Permite registrar todos os participantes de uma reserva, cada um em uma linha, facilitando consultas e mantendo o banco organizado.
+        </li>
     </ul>
 
     <hr>
@@ -186,37 +457,96 @@ CREATE TABLE CATEGORIAS_FIDELIDADE (
     </ul>
     <h4>Restrições de Integridade Referencial</h4>
     <ul>
-        <li><strong>RESERVAS.cliente_id</strong> referencia <strong>CLIENTES.id</strong></li>
-        <li><strong>PACOTES_TURISTICOS.destino_principal_id</strong> referencia <strong>DESTINOS.id</strong></li>
-        <li><strong>RESERVAS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong></li>
-        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong></li>
-        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.destino_secundario_id</strong> referencia <strong>DESTINOS.id</strong></li>
-        <li><strong>PARTICIPANTES_RESERVA.reserva_id</strong> referencia <strong>RESERVAS.id</strong></li>
+        <li><strong>RESERVAS.cliente_id</strong> referencia <strong>CLIENTES.id</strong>: Garante que toda reserva esteja associada a um cliente existente.</li>
+        <li><strong>PACOTES_TURISTICOS.destino_principal_id</strong> referencia <strong>DESTINOS.id</strong>: Garante que todo pacote turístico tenha um destino principal existente.</li>
+        <li><strong>RESERVAS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong>: Garante que toda reserva esteja associada a um pacote turístico existente.</li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong>: Garante que cada associação de destino secundário esteja ligada a um pacote turístico existente.</li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.destino_secundario_id</strong> referencia <strong>DESTINOS.id</strong>: Garante que cada associação de destino secundário esteja ligada a um destino existente.</li>
+        <li><strong>PARTICIPANTES_RESERVA.reserva_id</strong> referencia <strong>RESERVAS.id</strong>: Garante que cada participante esteja associado a uma reserva existente.</li>
     </ul>
     <h4>Restrições de Negócio Específicas do Sistema</h4>
     <ul>
-        <li>Descontos por Categoria de Fidelidade: aplicar descontos (15% para Platinum, 10% para Ouro, 5% para Prata) no valor_total_reserva com base em CLIENTES.categoria_fidelidade.</li>
-        <li>Desconto para Grupos: Se RESERVAS.numero_total_pessoas &gt; 10, aplicar desconto adicional de 10%.</li>
-        <li>Regras de Cancelamento: lógica para calcular motivo_cancelamento e valor da multa com base na data_reserva e data_inicio_viagem.</li>
-        <li>Destino Principal Obrigatório: PACOTES_TURISTICOS.destino_principal_id não pode ser nulo.</li>
-        <li>Pacotes Sazonais: lógica para verificar disponibilidade de pacotes sazonais em períodos específicos do ano.</li>
-        <li>Valor de Entrada Mínimo: RESERVAS.valor_entrada_pago deve ser no mínimo 30% de RESERVAS.valor_total_reserva.</li>
-        <li>Prazo de Pagamento para Clientes Corporativos: Se CLIENTES.tipo_cliente = 'corporativo', RESERVAS.data_limite_pagamento_final deve ser estendido para 45 dias após a data_reserva.</li>
+        <li><strong>Descontos por Categoria de Fidelidade</strong>: Implementar lógica para aplicar descontos (15% para Platinum, 10% para Ouro, 5% para Prata) no <code>valor_total_reserva</code> com base em <code>CLIENTES.categoria_fidelidade</code>.</li>
+        <li><strong>Desconto para Grupos</strong>: Se <code>RESERVAS.numero_total_pessoas</code> &gt; 10, aplicar um desconto adicional de 10%.</li>
+        <li><strong>Regras de Cancelamento</strong>: Lógica para calcular <code>motivo_cancelamento</code> e o valor da multa com base na <code>data_reserva</code> e <code>data_inicio_viagem</code>:
+            <ul>
+                <li>Cancelamento até 30 dias antes: sem multa.</li>
+                <li>Cancelamento entre 15-30 dias antes: multa de 20% do <code>valor_total_reserva</code>.</li>
+                <li>Cancelamento com menos de 15 dias antes: multa de 50% do <code>valor_total_reserva</code>.</li>
+            </ul>
+        </li>
+        <li><strong>Destino Principal Obrigatório</strong>: <code>PACOTES_TURISTICOS.destino_principal_id</code> não pode ser nulo.</li>
+        <li><strong>Pacotes Sazonais</strong>: Lógica para verificar a disponibilidade de pacotes com <code>PACOTES_TURISTICOS.status_pacote = 'sazonal'</code> em períodos específicos do ano (não modelado diretamente nas tabelas, mas uma regra de aplicação).</li>
+        <li><strong>Valor de Entrada Mínimo</strong>: <code>RESERVAS.valor_entrada_pago</code> deve ser no mínimo 30% de <code>RESERVAS.valor_total_reserva</code>.</li>
+        <li><strong>Prazo de Pagamento para Clientes Corporativos</strong>: Se <code>CLIENTES.tipo_cliente = 'corporativo'</code>, o <code>RESERVAS.data_limite_pagamento_final</code> deve ser estendido para 45 dias após a <code>data_reserva</code> (ou outra data de referência).</li>
     </ul>
 
     <h2 id="q3">QUESTÃO 3 - FORMAS NORMAIS</h2>
     <h3>a) Primeira Forma Normal (1FN)</h3>
-    <p>Discussão sobre atomicidade dos atributos, ausência de grupos repetitivos e unicidade das linhas. Todas as tabelas propostas estão em 1FN.</p>
-    <!-- ...continua com análise das formas normais... -->
+    <p>
+        Todas as tabelas foram construídas para garantir que cada campo armazene apenas um valor por registro, sem repetições ou agrupamentos. Por exemplo, os participantes de uma reserva são registrados individualmente na tabela PARTICIPANTES_RESERVA, o que facilita a consulta e evita problemas de redundância.
+    </p>
+    <ul>
+        <li><strong>CLIENTES</strong>: Todos os atributos são atômicos. O <code>id</code> garante a unicidade de cada registro. Portanto, a tabela CLIENTES está em 1FN.</li>
+        <li><strong>DESTINOS</strong>: Todos os atributos são atômicos. O <code>id</code> garante a unicidade de cada registro. Portanto, a tabela DESTINOS está em 1FN.</li>
+        <li><strong>PACOTES_TURISTICOS</strong>: Todos os atributos são atômicos. O <code>id</code> garante a unicidade. Portanto, a tabela PACOTES_TURISTICOS está em 1FN.</li>
+        <li><strong>RESERVAS</strong>: Todos os atributos são atômicos. O <code>id</code> garante a unicidade. Portanto, a tabela RESERVAS está em 1FN.</li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: Esta é uma entidade associativa. Seus atributos (<code>pacote_id</code>, <code>destino_secundario_id</code>) são atômicos e a chave primária composta (<code>pacote_id</code>, <code>destino_secundario_id</code>) garante a unicidade. Portanto, a tabela PACOTES_DESTINOS_SECUNDARIOS está em 1FN.</li>
+        <li><strong>PARTICIPANTES_RESERVA</strong>: Esta é uma entidade para resolver o atributo multivalorado de nomes de participantes. Seus atributos (<code>reserva_id</code>, <code>nome_participante</code>) são atômicos e a chave primária composta (<code>reserva_id</code>, <code>nome_participante</code>) garante a unicidade. Portanto, a tabela PARTICIPANTES_RESERVA está em 1FN.</li>
+    </ul>
+    <p><strong>Conclusão sobre 1FN:</strong> Todas as tabelas no modelo atualizado estão em Primeira Forma Normal, pois todos os atributos são atômicos e não há grupos repetitivos, e cada registro é único.</p>
 
     <h3>b) Segunda Forma Normal (2FN)</h3>
-    <p>Discussão sobre dependências funcionais parciais. Todas as tabelas propostas estão em 2FN.</p>
+    <p>
+        As tabelas com chave primária composta possuem apenas atributos que dependem da chave completa, e as demais usam chave primária simples. Isso garante que não haja dependências parciais.
+    </p>
+    <ul>
+        <li><strong>CLIENTES, DESTINOS, PACOTES_TURISTICOS, RESERVAS</strong>: Estas tabelas possuem chaves primárias simples (<code>id</code>). Se uma tabela está em 1FN e possui uma chave primária simples, ela automaticamente satisfaz a 2FN, pois não há dependências funcionais parciais da chave primária.</li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: A chave primária é composta por (<code>pacote_id</code>, <code>destino_secundario_id</code>). Não há atributos não-chave nesta tabela, apenas as chaves primárias e estrangeiras que compõem a chave primária. Portanto, não há dependências funcionais parciais, e a tabela está em 2FN.</li>
+        <li><strong>PARTICIPANTES_RESERVA</strong>: A chave primária é composta por (<code>reserva_id</code>, <code>nome_participante</code>). Não há atributos não-chave nesta tabela, apenas as chaves primárias e estrangeiras que compõem a chave primária. Portanto, não há dependências funcionais parciais, e a tabela está em 2FN.</li>
+    </ul>
+    <p><strong>Conclusão sobre 2FN:</strong> Todas as tabelas no modelo atualizado estão em Segunda Forma Normal.</p>
 
     <h3>c) Terceira Forma Normal (3FN)</h3>
-    <p>Discussão sobre dependências transitivas. Todas as tabelas propostas estão em 3FN. Benefícios da normalização destacados.</p>
+    <p>
+        O modelo evita dependências transitivas entre atributos não-chave e a chave primária. Por exemplo, o percentual de desconto de cada categoria de fidelidade é armazenado em uma tabela própria, evitando duplicidade e facilitando atualizações.
+    </p>
+    <ul>
+        <li>
+            <strong>CLIENTES</strong>: A tabela CLIENTES, em sua forma original, possuía o atributo <code>desconto_aplicavel</code>. A regra de negócio indica que o <code>desconto_aplicavel</code> é determinado pela <code>categoria_fidelidade</code> (e não diretamente pelo <code>cpf_cnpj</code>). Isso configura uma dependência transitiva: <code>cpf_cnpj</code> -&gt; <code>categoria_fidelidade</code> -&gt; <code>desconto_aplicavel</code>. Para alcançar a 3FN, o <code>desconto_aplicavel</code> deve ser removido da tabela <code>CLIENTES</code> e inferido através de uma tabela separada.
+            <ul>
+                <li><strong>Correção Implementada:</strong>
+                    <ul>
+                        <li>Foi criada uma nova tabela <code>CATEGORIAS_FIDELIDADE</code> com os atributos <code>nome_categoria</code> (PK) e <code>percentual_desconto</code>. A tabela <code>CLIENTES</code> agora referencia <code>CATEGORIAS_FIDELIDADE</code> através de <code>categoria_fidelidade</code> (que atua como FK para <code>nome_categoria</code>). O <code>desconto_aplicavel</code> é obtido por consulta à <code>CATEGORIAS_FIDELIDADE</code>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>DESTINOS</strong>: Não há dependências transitivas. Todos os atributos dependem diretamente do <code>codigo_destino</code>. Portanto, a tabela DESTINOS está em 3FN.</li>
+        <li><strong>PACOTES_TURISTICOS</strong>: Não há dependências transitivas. Todos os atributos dependem diretamente do <code>codigo_pacote</code>. Portanto, a tabela PACOTES_TURISTICOS está em 3FN.</li>
+        <li><strong>RESERVAS</strong>: O atributo <code>valor_restante_a_pagar</code> foi removido da tabela. Conforme discutido, ele é um atributo derivado (<code>valor_total_reserva - valor_entrada_pago</code>) e, portanto, não deve ser armazenado para evitar redundância e inconsistência. Ele pode ser calculado por uma função ou view no banco de dados. Com essa remoção, a tabela RESERVAS está em 3FN.</li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: Não há atributos não-chave. Portanto, está em 3FN.</li>
+        <li><strong>PARTICIPANTES_RESERVA</strong>: Não há atributos não-chave. Portanto, está em 3FN.</li>
+    </ul>
+    <p>
+        <strong>Benefícios da Normalização até a 3FN para este sistema:</strong>
+    </p>
+    <ul>
+        <li><strong>Redução de Redundância de Dados</strong>: Evita a duplicação de informações, como o percentual de desconto para cada cliente Platinum, que agora é armazenado apenas uma vez na tabela <code>CATEGORIAS_FIDELIDADE</code>.</li>
+        <li><strong>Melhoria da Integridade dos Dados</strong>: Garante que as informações sejam consistentes. Se o percentual de desconto para uma categoria de fidelidade mudar, a alteração precisa ser feita em apenas um local (na tabela <code>CATEGORIAS_FIDELIDADE</code>), evitando inconsistências. A remoção de <code>valor_restante_a_pagar</code> elimina a possibilidade de inconsistência entre o valor calculado e o valor armazenado.</li>
+        <li><strong>Facilitação de Consultas e Manutenção</strong>: O modelo se torna mais claro e fácil de entender, o que simplifica a escrita de consultas e a manutenção do banco de dados. Alterações na estrutura ou nas regras de negócio são mais fáceis de implementar.</li>
+        <li><strong>Otimização de Armazenamento</strong>: A remoção de dados redundantes leva a um uso mais eficiente do espaço de armazenamento.</li>
+    </ul>
+    <p>
+        Em resumo, a normalização para 3FN ajuda a criar um esquema de banco de dados mais robusto, flexível e fácil de gerenciar, minimizando problemas de inserção, atualização e exclusão de dados (anomalias de atualização).
+    </p>
 
     <h2 id="q4">QUESTÃO 4 - BANCO DE DADOS ORIENTADO A OBJETOS</h2>
     <h3>a) Modelagem de uma Entidade como "Classe" Orientada a Objetos no PostgreSQL</h3>
+    <p>
+        O PostgreSQL permite simular alguns conceitos de orientação a objetos, como tipos compostos e herança de tabelas. No exemplo abaixo, a entidade Cliente foi modelada como uma extensão da tabela Pessoa, aproveitando esses recursos para deixar o modelo mais próximo do mundo real.
+    </p>
+    <h4>Tipos Compostos (Simulando atributos complexos)</h4>
     <pre><code>-- Tipo composto para endereço
 CREATE TYPE endereco AS (
     rua VARCHAR(255),
@@ -233,8 +563,9 @@ CREATE TYPE contato AS (
     telefone_principal VARCHAR(20),
     telefone_secundario VARCHAR(20)
 );
-
--- Tabela "pessoa" como superclasse
+</code></pre>
+    <h4>Herança de Tabelas (Simulando hierarquia de classes)</h4>
+    <pre><code>-- Tabela "pessoa" como superclasse
 CREATE TABLE pessoa (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -249,9 +580,10 @@ CREATE TABLE cliente (
     data_cadastro DATE DEFAULT CURRENT_DATE,
     status_cliente VARCHAR(20) CHECK (status_cliente IN ('ativo', 'inativo')) DEFAULT 'ativo'
 ) INHERITS (pessoa);
-
--- Função para calcular idade do cliente
-CREATE OR REPLACE FUNCTION calcular_idade_cliente(p_id INTEGER)
+</code></pre>
+    <h4>Métodos (Funções) para Regras de Negócio</h4>
+    <h5>1. Calcular idade do cliente</h5>
+    <pre><code>CREATE OR REPLACE FUNCTION calcular_idade_cliente(p_id INTEGER)
 RETURNS INTEGER AS $$
 DECLARE
     data_nasc DATE;
@@ -261,8 +593,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 </code></pre>
+    <h5>2. Ativar cliente</h5>
+    <pre><code>CREATE OR REPLACE FUNCTION ativar_cliente(p_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE cliente SET status_cliente = 'ativo' WHERE id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+    <h5>3. Verificar se cliente está ativo</h5>
+    <pre><code>CREATE OR REPLACE FUNCTION cliente_esta_ativo(p_id INTEGER)
+RETURNS BOOLEAN AS $$
+DECLARE
+    ativo BOOLEAN;
+BEGIN
+    SELECT status_cliente = 'ativo' INTO ativo FROM cliente WHERE id = p_id;
+    RETURN ativo;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
 
     <h3>b) Implementação de um Método Específico</h3>
+    <p>
+        Abaixo está uma função que verifica se o cliente pode fazer uma nova reserva, considerando que ele deve estar ativo e não pode ter mais de 5 reservas em aberto.
+    </p>
     <pre><code>-- Função que verifica se o cliente pode realizar uma nova reserva
 CREATE OR REPLACE FUNCTION pode_realizar_reserva(p_id_cliente INTEGER)
 RETURNS BOOLEAN AS $$
@@ -276,12 +630,42 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 </code></pre>
+    <p><em>Esta função encapsula a lógica de negócio diretamente no banco, como um método de uma classe.</em></p>
 
     <h3>c) Comparação: BDOO (PostgreSQL Objeto-Relacional) vs Banco Relacional Tradicional</h3>
+    <p>
+        O uso de recursos objeto-relacionais no PostgreSQL facilita a modelagem de estruturas mais próximas do mundo real e permite encapsular regras de negócio no próprio banco. Por outro lado, pode tornar as consultas mais complexas e nem sempre é bem suportado por ferramentas de mercado. Para sistemas muito grandes ou que exigem relatórios complexos, o modelo relacional tradicional ainda costuma ser mais eficiente.
+    </p>
+</body>
+</html>
+</code></pre>
+    <p><em>Esta função encapsula a lógica de negócio diretamente no banco, como um método de uma classe.</em></p>
+
+    <h3>c) Comparação: BDOO (PostgreSQL Objeto-Relacional) vs Banco Relacional Tradicional</h3>
+    <p>
+        <strong>Vantagens do uso de recursos objeto-relacionais no PostgreSQL:</strong>
+    </p>
     <ul>
-        <li><strong>Vantagens:</strong> Reutilização de estruturas, herança, encapsulamento de regras de negócio, atributos complexos.</li>
-        <li><strong>Desvantagens:</strong> Consultas mais complexas, suporte parcial a recursos OO, menor compatibilidade com ferramentas de mercado, possível impacto de performance.</li>
+        <li>Permite reutilização de estruturas (tipos compostos) e herança de tabelas, aproximando o modelo do banco ao modelo de objetos da aplicação.</li>
+        <li>Encapsula regras de negócio em funções, facilitando manutenção e integridade.</li>
+        <li>Facilita a modelagem de atributos complexos e hierarquias.</li>
     </ul>
-    <p>O PostgreSQL permite simular muitos conceitos de BDOO, trazendo flexibilidade e expressividade ao modelo de dados. Porém, para sistemas com grande volume de dados e necessidade de relatórios complexos, o modelo relacional tradicional ainda pode ser mais eficiente e amplamente suportado.</p>
+    <p>
+        <strong>Desvantagens:</strong>
+    </p>
+    <ul>
+        <li>Consultas podem ficar mais complexas, especialmente com herança de tabelas.</li>
+        <li>Nem todos os recursos de BDOO são suportados plenamente (ex: polimorfismo de métodos).</li>
+        <li>Ferramentas de mercado e ORMs nem sempre suportam bem herança e tipos compostos.</li>
+        <li>Performance pode ser impactada em cenários de consultas complexas ou grandes volumes de dados.</li>
+    </ul>
+    <p>
+        <strong>Resumo:</strong><br>
+        O PostgreSQL permite simular muitos conceitos de BDOO, trazendo flexibilidade e expressividade ao modelo de dados. Porém, para sistemas com grande volume de dados e necessidade de relatórios complexos, o modelo relacional tradicional ainda pode ser mais eficiente e amplamente suportado.
+    </p>
+</body>
+</html>
+        O PostgreSQL permite simular muitos conceitos de BDOO, trazendo flexibilidade e expressividade ao modelo de dados. Porém, para sistemas com grande volume de dados e necessidade de relatórios complexos, o modelo relacional tradicional ainda pode ser mais eficiente e amplamente suportado.
+    </p>
 </body>
 </html>
