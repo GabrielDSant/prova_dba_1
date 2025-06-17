@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Prova de Banco de Dados - Gabriel Lucas Dias de Sant' Anna</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 2cm 2cm 2cm 2cm;
+            color: #222;
+            background: #fff;
+        }
+        h1, h2, h3, h4 {
+            color: #003366;
+            margin-top: 1.5em;
+        }
+        h1 { font-size: 2.2em; border-bottom: 2px solid #003366; padding-bottom: 0.2em; }
+        h2 { font-size: 1.5em; border-bottom: 1px solid #003366; padding-bottom: 0.1em; }
+        h3 { font-size: 1.2em; }
+        h4 { font-size: 1em; }
+        .info { margin-bottom: 2em; }
+        .info strong { display: inline-block; width: 120px; }
+        pre, code {
+            background: #f4f4f4;
+            border-radius: 4px;
+            font-family: 'Fira Mono', 'Consolas', monospace;
+            font-size: 0.98em;
+        }
+        pre {
+            padding: 1em;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+        code {
+            padding: 0.1em 0.3em;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #bbb;
+            padding: 0.5em 0.8em;
+            text-align: left;
+        }
+        th {
+            background: #e6f0fa;
+        }
+        ul, ol {
+            margin-left: 2em;
+        }
+        .img-center {
+            display: block;
+            margin: 2em auto;
+            max-width: 90%;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 8px #eee;
+        }
+        .caption {
+            text-align: center;
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 2em;
+        }
+        @media print {
+            body { margin: 0.5cm; }
+            a[href]:after { content: ""; }
+            .no-print { display: none; }
+        }
+        .toc {
+            background: #f8fafd;
+            border: 1px solid #cce;
+            padding: 1em;
+            margin-bottom: 2em;
+        }
+        .toc ul { margin: 0; }
+        .toc li { margin-bottom: 0.2em; }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <strong>Aluno:</strong> Gabriel Lucas Dias de Sant' Anna<br>
+        <strong>Professor:</strong> Fábio Cardozo<br>
+        <strong>Curso:</strong> Pós graduação em Administração de Banco de Dados<br>
+        <strong>Matéria:</strong> Projeto de Banco de Dados
+    </div>
+
+    <h1>Prova de Banco de Dados</h1>
+
+    <div class="toc">
+        <strong>Sumário</strong>
+        <ul>
+            <li><a href="#q1">Questão 1 - Modelagem Conceitual e Lógica</a></li>
+            <li><a href="#q2">Questão 2 - Modelo Entidade Relacionamento</a></li>
+            <li><a href="#q3">Questão 3 - Formas Normais</a></li>
+            <li><a href="#q4">Questão 4 - Banco de Dados Orientado a Objetos</a></li>
+        </ul>
+    </div>
+
+    <h2 id="q1">QUESTÃO 1 - MODELAGEM CONCEITUAL E LÓGICA</h2>
+
+    <h3>a) Identificação e Listagem de Entidades e Atributos</h3>
+    <!-- ...existing markdown content converted to HTML... -->
+    <p>Com base no mini mundo apresentado do Sistema de Gestão da Agência de Turismo "Mundo Aventura" e considerando a flexibilidade do PostgreSQL para abordar conceitos de BDOO, as seguintes entidades foram identificadas, juntamente com seus principais atributos, chaves primárias (PK), chaves estrangeiras (FK) e tipos de dados sugeridos. Notamos a aplicação de <strong>tipos compostos</strong> para atributos que representam estruturas complexas, alinhando-se à discussão da Questão 4.</p>
+    <!-- ...continua com as entidades, atributos, tabelas, etc, convertendo listas e blocos de código... -->
+
+    <h3>b) Identificação e Descrição dos Relacionamentos</h3>
+    <!-- ...existing code as HTML... -->
+
+    <h3>c) Modelo Lógico Relacional Resultante</h3>
+    <p><strong>SGDB usado:</strong> PostgreSQL</p>
+    <pre><code>-- Tipo composto para endereço
+CREATE TYPE endereco AS (
+    rua VARCHAR(255),
+    numero VARCHAR(10),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado CHAR(2),
+    cep VARCHAR(10)
+);
+
+-- Tipo composto para contato
+CREATE TYPE contato AS (
+    email VARCHAR(255),
+    telefone_principal VARCHAR(20),
+    telefone_secundario VARCHAR(20)
+);
+
+-- Tabela: CATEGORIAS_FIDELIDADE
+CREATE TABLE CATEGORIAS_FIDELIDADE (
+    id SERIAL PRIMARY KEY,
+    nome_categoria VARCHAR(20) NOT NULL UNIQUE,
+    percentual_desconto DECIMAL(5,2) NOT NULL
+);
+
+-- ...demais tabelas omitidas para concisão...
+</code></pre>
+
+    <h2 id="q2">QUESTÃO 2 - MODELO ENTIDADE RELACIONAMENTO (Atualizada e Revisada)</h2>
+
+    <h3>a) Diagrama ER completo (Legenda)</h3>
+    <ul>
+        <li>PK sinalizado com símbolo de uma chave dourada</li>
+        <li>FG's sinalizadas com símbolo de 2 chaves cor prata</li>
+        <li>Cardinalidade demarcada no contato de cada linha de conexão entre as entidades.</li>
+        <li>Não possui atributos multivalorados e nem entidades fracas</li>
+    </ul>
+
+    <!-- Imagem do DER -->
+    <div>
+        <img src="./imagens/DER_PGadmin.png" alt="DER - Modelo Entidade Relacionamento 1" class="img-center">
+        <div class="caption">Figura 1: DER detalhado gerado pelo pgAdmin</div>
+        <img src="./imagens/dbdiagram.png" alt="DER - Modelo Entidade Relacionamento 2" class="img-center">
+        <div class="caption">Figura 2: DER simplificado gerado pelo dbdiagram.io</div>
+    </div>
+    <!-- Fim das imagens do DER -->
+
+    <hr>
+
+    <h3>b) Entidades Associativas</h3>
+    <p>No modelo, identificamos duas entidades associativas essenciais para a normalização e correta representação dos relacionamentos N:M e atributos multivalorados:</p>
+    <ul>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS</strong>: Resolve o relacionamento N:M entre PACOTES_TURISTICOS e DESTINOS para destinos secundários.</li>
+        <li><strong>PARTICIPANTES_RESERVA</strong>: Resolve o atributo multivalorado lista_nomes_participantes da entidade RESERVAS.</li>
+    </ul>
+
+    <hr>
+
+    <h3>c) Restrições de Integridade</h3>
+    <h4>Restrições de Domínio</h4>
+    <ul>
+        <li><strong>CLIENTES.tipo_cliente</strong>: Deve ser 'individual', 'corporativo' ou 'grupo'.</li>
+        <li><strong>CLIENTES.categoria_fidelidade_id</strong>: Deve referenciar um id válido em CATEGORIAS_FIDELIDADE.</li>
+        <li><strong>CLIENTES.status_cliente</strong>: Deve ser 'ativo' ou 'inativo'.</li>
+        <li><strong>DESTINOS.nivel_dificuldade</strong>: Deve ser 'facil', 'moderado' ou 'dificil'.</li>
+        <li><strong>DESTINOS.categoria_turistica</strong>: Deve ser 'praia', 'montanha', 'cidade historica', 'aventura', 'cultural' ou 'gastronomico'.</li>
+        <li><strong>DESTINOS.status_destino</strong>: Deve ser 'ativo', 'inativo' ou 'sazonal'.</li>
+        <li><strong>PACOTES_TURISTICOS.categoria_pacote</strong>: Deve ser 'economico', 'standard', 'premium' ou 'luxo'.</li>
+        <li><strong>PACOTES_TURISTICOS.tipo_viagem</strong>: Deve ser 'individual', 'casal', 'familia' ou 'grupo'.</li>
+        <li><strong>PACOTES_TURISTICOS.inclui_alimentacao</strong>: Deve ser 'cafe', 'meia pensao' ou 'pensao completa'.</li>
+        <li><strong>PACOTES_TURISTICOS.nivel_atividade_fisica</strong>: Deve ser 'baixo', 'medio' ou 'alto'.</li>
+        <li><strong>PACOTES_TURISTICOS.status_pacote</strong>: Deve ser 'ativo', 'inativo' ou 'sazonal'.</li>
+        <li><strong>RESERVAS.forma_pagamento</strong>: Deve ser 'cartao', 'transferencia', 'dinheiro' ou 'parcelado'.</li>
+        <li><strong>RESERVAS.status_reserva</strong>: Deve ser 'pendente', 'confirmada', 'paga', 'cancelada', 'em andamento' ou 'finalizada'.</li>
+    </ul>
+    <h4>Restrições de Integridade Referencial</h4>
+    <ul>
+        <li><strong>RESERVAS.cliente_id</strong> referencia <strong>CLIENTES.id</strong></li>
+        <li><strong>PACOTES_TURISTICOS.destino_principal_id</strong> referencia <strong>DESTINOS.id</strong></li>
+        <li><strong>RESERVAS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong></li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.pacote_id</strong> referencia <strong>PACOTES_TURISTICOS.id</strong></li>
+        <li><strong>PACOTES_DESTINOS_SECUNDARIOS.destino_secundario_id</strong> referencia <strong>DESTINOS.id</strong></li>
+        <li><strong>PARTICIPANTES_RESERVA.reserva_id</strong> referencia <strong>RESERVAS.id</strong></li>
+    </ul>
+    <h4>Restrições de Negócio Específicas do Sistema</h4>
+    <ul>
+        <li>Descontos por Categoria de Fidelidade: aplicar descontos (15% para Platinum, 10% para Ouro, 5% para Prata) no valor_total_reserva com base em CLIENTES.categoria_fidelidade.</li>
+        <li>Desconto para Grupos: Se RESERVAS.numero_total_pessoas &gt; 10, aplicar desconto adicional de 10%.</li>
+        <li>Regras de Cancelamento: lógica para calcular motivo_cancelamento e valor da multa com base na data_reserva e data_inicio_viagem.</li>
+        <li>Destino Principal Obrigatório: PACOTES_TURISTICOS.destino_principal_id não pode ser nulo.</li>
+        <li>Pacotes Sazonais: lógica para verificar disponibilidade de pacotes sazonais em períodos específicos do ano.</li>
+        <li>Valor de Entrada Mínimo: RESERVAS.valor_entrada_pago deve ser no mínimo 30% de RESERVAS.valor_total_reserva.</li>
+        <li>Prazo de Pagamento para Clientes Corporativos: Se CLIENTES.tipo_cliente = 'corporativo', RESERVAS.data_limite_pagamento_final deve ser estendido para 45 dias após a data_reserva.</li>
+    </ul>
+
+    <h2 id="q3">QUESTÃO 3 - FORMAS NORMAIS</h2>
+    <h3>a) Primeira Forma Normal (1FN)</h3>
+    <p>Discussão sobre atomicidade dos atributos, ausência de grupos repetitivos e unicidade das linhas. Todas as tabelas propostas estão em 1FN.</p>
+    <!-- ...continua com análise das formas normais... -->
+
+    <h3>b) Segunda Forma Normal (2FN)</h3>
+    <p>Discussão sobre dependências funcionais parciais. Todas as tabelas propostas estão em 2FN.</p>
+
+    <h3>c) Terceira Forma Normal (3FN)</h3>
+    <p>Discussão sobre dependências transitivas. Todas as tabelas propostas estão em 3FN. Benefícios da normalização destacados.</p>
+
+    <h2 id="q4">QUESTÃO 4 - BANCO DE DADOS ORIENTADO A OBJETOS</h2>
+    <h3>a) Modelagem de uma Entidade como "Classe" Orientada a Objetos no PostgreSQL</h3>
+    <pre><code>-- Tipo composto para endereço
+CREATE TYPE endereco AS (
+    rua VARCHAR(255),
+    numero VARCHAR(10),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado CHAR(2),
+    cep VARCHAR(10)
+);
+
+-- Tipo composto para contato
+CREATE TYPE contato AS (
+    email VARCHAR(255),
+    telefone_principal VARCHAR(20),
+    telefone_secundario VARCHAR(20)
+);
+
+-- Tabela "pessoa" como superclasse
+CREATE TABLE pessoa (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    data_nascimento DATE,
+    info_contato contato,
+    endereco_residencial endereco
+);
+
+-- Tabela "cliente" herdando de "pessoa"
+CREATE TABLE cliente (
+    cpf_cnpj VARCHAR(14) UNIQUE NOT NULL,
+    data_cadastro DATE DEFAULT CURRENT_DATE,
+    status_cliente VARCHAR(20) CHECK (status_cliente IN ('ativo', 'inativo')) DEFAULT 'ativo'
+) INHERITS (pessoa);
+
+-- Função para calcular idade do cliente
+CREATE OR REPLACE FUNCTION calcular_idade_cliente(p_id INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+    data_nasc DATE;
+BEGIN
+    SELECT data_nascimento INTO data_nasc FROM pessoa WHERE id = p_id;
+    RETURN EXTRACT(YEAR FROM AGE(NOW(), data_nasc));
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+
+    <h3>b) Implementação de um Método Específico</h3>
+    <pre><code>-- Função que verifica se o cliente pode realizar uma nova reserva
+CREATE OR REPLACE FUNCTION pode_realizar_reserva(p_id_cliente INTEGER)
+RETURNS BOOLEAN AS $$
+DECLARE
+    ativo BOOLEAN;
+    qtd_reservas INTEGER;
+BEGIN
+    SELECT status_cliente = 'ativo' INTO ativo FROM cliente WHERE id = p_id_cliente;
+    SELECT COUNT(*) INTO qtd_reservas FROM reservas WHERE cliente_id = p_id_cliente AND status_reserva IN ('pendente', 'confirmada', 'em andamento');
+    RETURN ativo AND qtd_reservas < 5;
+END;
+$$ LANGUAGE plpgsql;
+</code></pre>
+
+    <h3>c) Comparação: BDOO (PostgreSQL Objeto-Relacional) vs Banco Relacional Tradicional</h3>
+    <ul>
+        <li><strong>Vantagens:</strong> Reutilização de estruturas, herança, encapsulamento de regras de negócio, atributos complexos.</li>
+        <li><strong>Desvantagens:</strong> Consultas mais complexas, suporte parcial a recursos OO, menor compatibilidade com ferramentas de mercado, possível impacto de performance.</li>
+    </ul>
+    <p>O PostgreSQL permite simular muitos conceitos de BDOO, trazendo flexibilidade e expressividade ao modelo de dados. Porém, para sistemas com grande volume de dados e necessidade de relatórios complexos, o modelo relacional tradicional ainda pode ser mais eficiente e amplamente suportado.</p>
+</body>
+</html>

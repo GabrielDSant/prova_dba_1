@@ -12,7 +12,7 @@ Escolha uma entidade do sistema (Usuário, Material, Empréstimo ou Funcionário
 ## b) (1,0 ponto)
 
 Implemente um método específico da classe escolhida que demonstre uma operação complexa do sistema. O método deve:
-- Ter nome descritivo e parâmetros apropriados
+- Ter nome descritivo e parâmetros apropriados 
 - Incluir lógica de validação
 - Implementar uma regra de negócio específica do mini mundo
 - Ser documentado com comentários explicativos
